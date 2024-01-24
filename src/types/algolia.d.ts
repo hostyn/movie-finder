@@ -4,8 +4,8 @@ export interface Movie {
   originalTitle: string;
   year: number;
   genres: string[];
-  averageRating: number;
+  averageRating: number | null;
   numVotes: number;
-  poster: string;
-  runtimeMinutes: number;
+  poster: string | null;
+  runtimeMinutes: number | null;
 }
