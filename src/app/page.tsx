@@ -18,9 +18,3 @@ export default function Home() {
     </main>
   );
 }
-
-// bg-[#1d1728] hover:bg-[radial-gradient(80px_80px_at_var(--position-x)_var(--position-y),#2d243e,transparent_100%)]
-// bg-[#1d1728] bg-[radial-gradient(80px_80px_at_var(--position-x)_var(--position-y),#2d243e,transparent)]
-
-// #2d243e
-// #1d1728
