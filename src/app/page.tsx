@@ -6,9 +6,10 @@ import Search from "@/components/Search";
 
 export default async function Home() {
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
+  await queryClient.prefetchInfiniteQuery({
     queryKey: ["search", ""],
-    queryFn: () => algolia.search<Movie>(""),
+    queryFn: ({ pageParam }) => algolia.search<Movie>("", { page: pageParam }),
+    initialPageParam: 0,
   });
   const dehydratedState = dehydrate(queryClient);
 
