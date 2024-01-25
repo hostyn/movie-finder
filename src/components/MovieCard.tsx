@@ -56,7 +56,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
           </div>
         </div>
         <div className="flex gap-2 flex-wrap">
-          {movie.genres.map((genre) => (
+          {movie.genres?.map((genre) => (
             <span
               key={genre}
               className="whitespace-nowrap text-sm rounded-md border-slate-400 border-[1px] text-slate-400 px-2"

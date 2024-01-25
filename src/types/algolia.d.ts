@@ -3,7 +3,7 @@ export interface Movie {
   primaryTitle: string;
   originalTitle: string;
   year: number;
-  genres: string[];
+  genres: string[] | null;
   averageRating: number | null;
   numVotes: number;
   poster: string | null;
