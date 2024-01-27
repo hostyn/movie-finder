@@ -15,7 +15,7 @@ export default async function Home() {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <main className="flex min-h-screen flex-col items-center p-24 gap-8">
+      <main className="flex min-h-screen flex-col items-center p-4 md:p-12 lg:p-24 gap-8">
         <h1 className="text-6xl">Find a movie</h1>
         <Search />
       </main>

@@ -46,7 +46,7 @@ export default function Input({
       onBlur={handleBlur}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="relative flex overflow-hidden w-[32rem] cursor-text items-center gap-4 text-slate-300 rounded-full px-6 py-4 bg-[#1d1728] focus-within:outline-none focus-within:ring-2 focus-within:ring-[#8678F9] focus-within:ring-offset-2 focus-within:ring-offset-slate-950 transition duration-300"
+      className="relative flex overflow-hidden w-full lg:w-[32rem] cursor-text items-center gap-2 sm:gap-4 text-slate-300 rounded-full px-3 py-4 sm:px-6 bg-[#1d1728] focus-within:outline-none focus-within:ring-2 focus-within:ring-[#8678F9] focus-within:ring-offset-2 focus-within:ring-offset-slate-950 transition duration-300"
       style={{
         background: isFocused ? "#2d243e" : "#1d1728",
       }}
@@ -62,7 +62,7 @@ export default function Input({
       />
       <SearchIcon className="z-10 text-[#565c7a]" />
       <input
-        className="text-xl z-10 bg-transparent focus:outline-none placeholder:text-[#565c7a]"
+        className="text-xl z-10 w-full bg-transparent focus:outline-none placeholder:text-[#565c7a]"
         {...props}
       />
     </label>
