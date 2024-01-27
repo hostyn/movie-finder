@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { SearchIcon } from "./icons";
+import Filters from "./Filters";
 
 export default function Input({
   ...props
@@ -65,6 +66,7 @@ export default function Input({
         className="text-xl z-10 w-full bg-transparent focus:outline-none placeholder:text-[#565c7a]"
         {...props}
       />
+      <Filters />
     </label>
   );
 }

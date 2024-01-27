@@ -16,7 +16,9 @@ export default function Search() {
     useInfiniteQuery({
       queryKey: ["search", query],
       queryFn: ({ pageParam = 1 }: { pageParam: number }) =>
-        algolia.search<Movie>(query, { page: pageParam }),
+        algolia.search<Movie>(query, {
+          page: pageParam,
+        }),
       getNextPageParam: (lastPage) =>
         lastPage.page === lastPage.nbPages - 1 ? undefined : lastPage.page + 1,
       initialPageParam: 0,
