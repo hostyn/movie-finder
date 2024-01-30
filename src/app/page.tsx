@@ -3,12 +3,27 @@ import getQueryClient from "./getQueryClient";
 import { algolia } from "@/services/algolia";
 import { Movie } from "@/types/algolia";
 import Search from "@/components/Search";
+import {
+  constructFilters,
+  getFiltersFromSearchParams,
+  getStringOrFirstElement,
+} from "@/util/filters";
 
-export default async function Home() {
+export default async function Home({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const q = getStringOrFirstElement(searchParams.q) ?? "";
+  const filters = constructFilters(getFiltersFromSearchParams(searchParams));
+
   const queryClient = getQueryClient();
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["search", ""],
-    queryFn: ({ pageParam }) => algolia.search<Movie>("", { page: pageParam }),
+    queryKey: ["search", q, filters],
+    queryFn: ({ pageParam }) =>
+      algolia.search<Movie>(q, { page: pageParam, filters }),
     initialPageParam: 0,
   });
   const dehydratedState = dehydrate(queryClient);

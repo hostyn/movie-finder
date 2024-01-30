@@ -9,15 +9,29 @@ import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ArrowUpIcon, ErrorIcon } from "./icons";
 import Loading from "./Loading";
+import { useSearchParams, useRouter } from "next/navigation";
+import {
+  constructFilters,
+  objectToQueryParams,
+  useFilters,
+} from "@/util/filters";
 
 export default function Search() {
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const { push } = useRouter();
+  const filters = useFilters();
+
+  const [query, setQuery] = useState(
+    searchParams.getAll("q")?.[0]?.toString() || ""
+  );
+
   const { data, fetchNextPage, hasNextPage, isLoading, isError } =
     useInfiniteQuery({
-      queryKey: ["search", query],
+      queryKey: ["search", query, constructFilters(filters)],
       queryFn: ({ pageParam = 1 }: { pageParam: number }) =>
         algolia.search<Movie>(query, {
           page: pageParam,
+          filters: constructFilters(filters),
         }),
       getNextPageParam: (lastPage) =>
         lastPage.page === lastPage.nbPages - 1 ? undefined : lastPage.page + 1,
@@ -30,6 +44,9 @@ export default function Search() {
         placeholder="The Machinist"
         value={query}
         onChange={({ target }) => setQuery(target.value)}
+        onBlur={() =>
+          push(`/?${objectToQueryParams({ q: query, ...filters })}`)
+        }
       />
 
       {isLoading ? (
