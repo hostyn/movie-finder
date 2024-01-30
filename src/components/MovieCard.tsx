@@ -1,22 +1,10 @@
 import { Movie } from "@/types/algolia";
 import { NoPhotoIcon, StarIcon } from "./icons";
+import { parseNumVotes, parsePoster, parseRuntime } from "@/util/parsers";
 
 interface MovieCardProps {
   movie: Movie;
 }
-
-const parseRuntime = (runtime: number) => {
-  const hours = Math.floor(runtime / 60);
-  const minutes = runtime % 60;
-  return `${hours}h ${minutes}min`;
-};
-
-const parsePoster = (poster: string) => {
-  const splitedPoster = poster.split(".");
-  splitedPoster[splitedPoster.length - 2] = "_V1_FMwebp_UX250_QL80_";
-  splitedPoster[splitedPoster.length - 1] = "webp";
-  return splitedPoster.join(".");
-};
 
 export default function MovieCard({ movie }: MovieCardProps) {
   return (
@@ -46,10 +34,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
               <span className="flex items-center gap-1 font-bold">
                 {movie.averageRating ?? "-"}
                 <span className="text-slate-400 text-sm">
-                  /{" "}
-                  {Intl.NumberFormat("en-US", { notation: "compact" }).format(
-                    movie.numVotes
-                  )}
+                  / {parseNumVotes(movie.numVotes)}
                 </span>
               </span>
             </div>
