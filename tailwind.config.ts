@@ -17,6 +17,9 @@ const config: Config = {
       transitionProperty: {
         colors:
           "color, background-color, border-color, text-decoration-color, fill, stroke, outline-color",
+
+        slider: "background-color, outline-width",
+        genre: "color, background-color, outline-color outline-width",
       },
 
       animation: {
