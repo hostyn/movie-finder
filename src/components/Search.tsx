@@ -58,13 +58,14 @@ export default function Search() {
         </div>
       ) : (
         <>
-          <div className="flex justify-between w-full text-slate-300">
-            <span className="flex text-lg font-bold gap-2 items-center ">
+          <div className="flex justify-center sm:justify-between w-full text-slate-300">
+            <span className="hidden sm:flex text-lg font-bold gap-2 items-center ">
               <SearchIcon className="text-md" />
               Search results
             </span>
             <p className="font-bold">
-              {data?.pages[0].nbHits} hits in {data?.pages[0].processingTimeMS}
+              {Intl.NumberFormat().format(Number(data?.pages[0].nbHits))} hits
+              in {data?.pages[0].processingTimeMS}
               ms
             </p>
           </div>
