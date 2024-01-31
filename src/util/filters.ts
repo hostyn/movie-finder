@@ -36,7 +36,7 @@ export const getStringOrFirstElement = (
   return value?.toString();
 };
 
-const validateFilters = (filters: Filters): Filters => {
+export const validateFilters = (filters: Filters): Filters => {
   return {
     minYear:
       filters.minYear == null ||
@@ -52,7 +52,7 @@ const validateFilters = (filters: Filters): Filters => {
         : filters.maxYear,
     minVotes:
       filters.minRating == null ||
-      filters.minRating < 0 ||
+      filters.minRating <= 0 ||
       filters.minRating > MAX_NUM_VOTES ||
       filters.minRating % 10000 !== 0
         ? undefined
@@ -81,7 +81,7 @@ const validateFilters = (filters: Filters): Filters => {
     maxRuntime:
       filters.maxRuntime == null ||
       filters.maxRuntime < 0 ||
-      filters.maxRuntime >= 180 ||
+      filters.maxRuntime > 180 ||
       filters.maxRuntime % 10 !== 0
         ? undefined
         : filters.maxRuntime,
