@@ -61,14 +61,14 @@ export const validateFilters = (filters: Filters): Filters => {
       filters.minRating == null ||
       filters.minRating <= 0 ||
       filters.minRating > 10 ||
-      filters.minRating % 0.1 !== 0
+      (filters.minRating * 10) % 1 !== 0
         ? undefined
         : filters.minRating,
     maxRating:
       filters.maxRating == null ||
       filters.maxRating < 0 ||
       filters.maxRating >= 10 ||
-      filters.maxRating % 0.1 !== 0
+      (filters.maxRating * 10) % 1 !== 0
         ? undefined
         : filters.maxRating,
     minRuntime:
