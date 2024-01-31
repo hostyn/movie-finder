@@ -7,7 +7,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import Input from "./Input";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { ArrowUpIcon, ErrorIcon, SearchIcon } from "./icons";
+import { ArrowUpIcon, ErrorIcon, NoResultIcon, SearchIcon } from "./icons";
 import Loading from "./Loading";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
@@ -54,7 +54,18 @@ export default function Search() {
       ) : isError ? (
         <div className="col-span-full flex flex-col items-center pt-8 gap-4 justify-center">
           <ErrorIcon className="text-xl" />
-          <p>Error!? What happened?? 🤯</p>
+          <p className="max-w-[40ch] text-balance text-center">
+            Oops! Gremlins took the results. Let&apos;s try again, no gremlins
+            this time! 🧚‍♂️🕵️‍♀️
+          </p>
+        </div>
+      ) : data?.pages[0].nbHits === 0 ? (
+        <div className="col-span-full flex flex-col items-center pt-8 gap-4 justify-center">
+          <NoResultIcon className="text-xl" />
+          <p className="max-w-[40ch] text-balance text-center">
+            Oops! No pink unicorns with golden wings here. Let&apos;s try
+            something else! 🌍✨
+          </p>
         </div>
       ) : (
         <>

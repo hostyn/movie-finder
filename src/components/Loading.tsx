@@ -5,12 +5,9 @@ export default function Loading() {
         className="inline-block size-6 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
         role="status"
       />
-      <p className="">
-        Wait, are you really seeing this?
-        <br />
-        This is a bit awkward.
-        <br />
-        Maybe it&apos;s your internet? 🤨
+      <p className="max-w-[40ch] text-balance text-center">
+        Searching at warp speed! If you&apos;re seeing this, you&apos;ve
+        outpaced the internet. 🚀🌐
       </p>
     </div>
   );
