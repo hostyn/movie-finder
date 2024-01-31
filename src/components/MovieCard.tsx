@@ -8,7 +8,11 @@ interface MovieCardProps {
 
 export default function MovieCard({ movie }: MovieCardProps) {
   return (
-    <article className="flex flex-col w-64 p-2 hover:bg-[#1d1728] rounded-lg transition [&>div]:hover:scale-95">
+    <a
+      href={`https://www.imdb.com/title/${movie.objectID}`}
+      target="_blank"
+      className="flex flex-col w-64 p-2 hover:bg-[#1d1728] rounded-lg transition [&>div]:hover:scale-95"
+    >
       <div className="flex flex-col gap-2 transition-all">
         <div className="w-full rounded-lg aspect-[2/3] bg-slate-600 flex items-center justify-center">
           {movie.poster != null ? (
@@ -51,6 +55,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
           ))}
         </div>
       </div>
-    </article>
+    </a>
   );
 }
