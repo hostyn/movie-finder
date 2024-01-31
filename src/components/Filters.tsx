@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CloseIcon, FilterIcon } from "./icons";
 import Slider from "./Slider";
@@ -32,6 +32,7 @@ export function FilterPortal() {
   const { push } = useRouter();
   const searchParams = new URLSearchParams(window.location.search);
 
+  const [state, setState] = useState<"closed" | "opened">("closed");
   const [year, setYear] = useState([
     currentFilters.minYear ?? MIN_YEAR,
     currentFilters.maxYear ?? MAX_YEAR,
@@ -83,10 +84,29 @@ export function FilterPortal() {
     setMinVotes([0]);
   };
 
+  useEffect(() => {
+    setYear([
+      currentFilters.minYear ?? MIN_YEAR,
+      currentFilters.maxYear ?? MAX_YEAR,
+    ]);
+    setRuntime([
+      currentFilters.minRuntime ?? 0,
+      currentFilters.maxRuntime ?? 190,
+    ]);
+    setGenres(currentFilters.genres ?? []);
+    setRating([currentFilters.minRating ?? 0, currentFilters.maxRating ?? 10]);
+    setMinVotes([currentFilters.minVotes ?? 0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-10 bg-slate-400/50 opacity-100 data-[state=closed]:animate-overlay-hide data-[state=open]:animate-overlay-show " />
-      <Dialog.Content className="fixed left-1/2 top-1/2 z-20 flex max-h-full w-[512px] max-w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-4 rounded-md bg-slate-900 p-6 shadow-md data-[state=closed]:animate-content-hide data-[state=open]:animate-content-show ">
+      <Dialog.Content
+        onOpenAutoFocus={() => setState("opened")}
+        onCloseAutoFocus={() => setState("closed")}
+        className="fixed left-1/2 top-1/2 z-20 flex max-h-full w-[512px] max-w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-4 rounded-md bg-slate-900 p-6 shadow-md data-[state=closed]:animate-content-hide data-[state=open]:animate-content-show "
+      >
         <Dialog.Title className="flex gap-2 text-lg font-bold">
           <FilterIcon /> Filters
         </Dialog.Title>
