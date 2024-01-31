@@ -1,16 +1,31 @@
+import { GENRES, MAX_NUM_VOTES, MAX_YEAR, MIN_YEAR } from "@/config/constants";
+import { Genre } from "@/types/algolia";
 import { useSearchParams } from "next/navigation";
 
-interface Filters {
-  [key: string]: string | string[] | undefined;
-  minYear?: string;
-  maxYear?: string;
-  minRating?: string;
-  maxRating?: string;
-  minVotes?: string;
-  minRuntime?: string;
-  maxRuntime?: string;
+export interface Filters {
+  [key: string]: number | string[] | undefined;
+  minYear?: number;
+  maxYear?: number;
+  minRating?: number;
+  maxRating?: number;
+  minVotes?: number;
+  minRuntime?: number;
+  maxRuntime?: number;
   genres?: string[];
 }
+
+const getNumberOrUndefined = (
+  value: string | undefined
+): number | undefined => {
+  if (value == null || value.length === 0) {
+    return undefined;
+  }
+  const parsed = Number(value);
+  if (Number.isNaN(parsed)) {
+    return undefined;
+  }
+  return parsed;
+};
 
 export const getStringOrFirstElement = (
   value: string | string[] | undefined
@@ -21,87 +36,131 @@ export const getStringOrFirstElement = (
   return value?.toString();
 };
 
+const validateFilters = (filters: Filters): Filters => {
+  return {
+    minYear:
+      filters.minYear == null ||
+      filters.minYear <= MIN_YEAR ||
+      filters.minYear > MAX_YEAR
+        ? undefined
+        : filters.minYear,
+    maxYear:
+      filters.maxYear == null ||
+      filters.maxYear < MIN_YEAR ||
+      filters.maxYear >= MAX_YEAR
+        ? undefined
+        : filters.maxYear,
+    minVotes:
+      filters.minRating == null ||
+      filters.minRating < 0 ||
+      filters.minRating > MAX_NUM_VOTES ||
+      filters.minRating % 10000 !== 0
+        ? undefined
+        : filters.minRating,
+    minRating:
+      filters.minRating == null ||
+      filters.minRating <= 0 ||
+      filters.minRating > 10 ||
+      filters.minRating % 0.1 !== 0
+        ? undefined
+        : filters.minRating,
+    maxRating:
+      filters.maxRating == null ||
+      filters.maxRating < 0 ||
+      filters.maxRating >= 10 ||
+      filters.maxRating % 0.1 !== 0
+        ? undefined
+        : filters.maxRating,
+    minRuntime:
+      filters.minRuntime == null ||
+      filters.minRuntime <= 0 ||
+      filters.minRuntime > 180 ||
+      filters.minRuntime % 10 !== 0
+        ? undefined
+        : filters.minRuntime,
+    maxRuntime:
+      filters.maxRuntime == null ||
+      filters.maxRuntime < 0 ||
+      filters.maxRuntime >= 180 ||
+      filters.maxRuntime % 10 !== 0
+        ? undefined
+        : filters.maxRuntime,
+    genres: filters.genres?.filter((genre) => GENRES.includes(genre as Genre)),
+  };
+};
+
 export const getFiltersFromSearchParams = (searchParams: {
   [key: string]: string | string[] | undefined;
 }): Filters => {
-  return {
-    minYear: getStringOrFirstElement(searchParams.minYear),
-    maxYear: getStringOrFirstElement(searchParams.maxYear),
-    minRating: getStringOrFirstElement(searchParams.minRating),
-    maxRating: getStringOrFirstElement(searchParams.maxRating),
-    minVotes: getStringOrFirstElement(searchParams.minVotes),
-    minRuntime: getStringOrFirstElement(searchParams.minRuntime),
-    maxRuntime: getStringOrFirstElement(searchParams.maxRuntime),
-    genres: searchParams.genres?.toString().split(","),
-  };
+  return validateFilters({
+    minYear: getNumberOrUndefined(
+      getStringOrFirstElement(searchParams.minYear)
+    ),
+    maxYear: getNumberOrUndefined(
+      getStringOrFirstElement(searchParams.maxYear)
+    ),
+    minRating: getNumberOrUndefined(
+      getStringOrFirstElement(searchParams.minRating)
+    ),
+    maxRating: getNumberOrUndefined(
+      getStringOrFirstElement(searchParams.maxRating)
+    ),
+    minVotes: getNumberOrUndefined(
+      getStringOrFirstElement(searchParams.minVotes)
+    ),
+    minRuntime: getNumberOrUndefined(
+      getStringOrFirstElement(searchParams.minRuntime)
+    ),
+    maxRuntime: getNumberOrUndefined(
+      getStringOrFirstElement(searchParams.maxRuntime)
+    ),
+    genres: searchParams.genres?.toString().split(",") ?? [],
+  });
 };
 
 export const useFilters = (): Filters => {
   const searchParams = useSearchParams();
 
-  return {
-    minYear: searchParams.getAll("minYear")?.[0]?.toString() || undefined,
-    maxYear: searchParams.getAll("maxYear")?.[0]?.toString() || undefined,
-    minRating: searchParams.getAll("minRating")?.[0]?.toString() || undefined,
-    maxRating: searchParams.getAll("maxRating")?.[0]?.toString() || undefined,
-    minVotes: searchParams.getAll("minVotes")?.[0]?.toString() || undefined,
-    minRuntime: searchParams.getAll("minRuntime")?.[0]?.toString() || undefined,
-    maxRuntime: searchParams.getAll("maxRuntime")?.[0]?.toString() || undefined,
-    genres: searchParams.getAll("genres")?.toString().split(","),
-  };
+  return validateFilters({
+    minYear: getNumberOrUndefined(
+      searchParams.getAll("minYear")?.[0]?.toString() || undefined
+    ),
+    maxYear: getNumberOrUndefined(
+      searchParams.getAll("maxYear")?.[0]?.toString() || undefined
+    ),
+    minRating: getNumberOrUndefined(
+      searchParams.getAll("minRating")?.[0]?.toString() || undefined
+    ),
+    maxRating: getNumberOrUndefined(
+      searchParams.getAll("maxRating")?.[0]?.toString() || undefined
+    ),
+    minVotes: getNumberOrUndefined(
+      searchParams.getAll("minVotes")?.[0]?.toString() || undefined
+    ),
+    minRuntime: getNumberOrUndefined(
+      searchParams.getAll("minRuntime")?.[0]?.toString() || undefined
+    ),
+    maxRuntime: getNumberOrUndefined(
+      searchParams.getAll("maxRuntime")?.[0]?.toString() || undefined
+    ),
+    genres: searchParams.getAll("genres")?.toString().split(",") ?? [],
+  });
 };
 
 export const constructFilters = (filters: Filters): string => {
   const algoliaFilters: string[] = [];
 
-  if (
-    (filters.minYear?.length ?? 0) > 0 &&
-    !Number.isNaN(Number(filters.minYear))
-  ) {
-    algoliaFilters.push(`year >= ${filters.minYear}`);
-  }
-
-  if (
-    (filters.maxYear?.length ?? 0) > 0 &&
-    !Number.isNaN(Number(filters.maxYear))
-  ) {
-    algoliaFilters.push(`year <= ${filters.maxYear}`);
-  }
-
-  if (
-    (filters.minRating?.length ?? 0) > 0 &&
-    !Number.isNaN(Number(filters.minRating))
-  ) {
+  filters.minYear && algoliaFilters.push(`year >= ${filters.minYear}`);
+  filters.maxYear && algoliaFilters.push(`year <= ${filters.maxYear}`);
+  filters.minRating &&
     algoliaFilters.push(`averageRating >= ${filters.minRating}`);
-  }
-
-  if (
-    (filters.maxRating?.length ?? 0) > 0 &&
-    !Number.isNaN(Number(filters.maxRating))
-  ) {
+  filters.maxRating &&
     algoliaFilters.push(`averageRating <= ${filters.maxRating}`);
-  }
-
-  if (
-    (filters.minVotes?.length ?? 0) > 0 &&
-    !Number.isNaN(Number(filters.minVotes))
-  ) {
-    algoliaFilters.push(`numVotes >= ${filters.minVotes}`);
-  }
-
-  if (
-    (filters.minRuntime?.length ?? 0) > 0 &&
-    !Number.isNaN(Number(filters.minRuntime))
-  ) {
+  filters.minVotes && algoliaFilters.push(`numVotes >= ${filters.minVotes}`);
+  filters.minRuntime &&
     algoliaFilters.push(`runtimeMinutes >= ${filters.minRuntime}`);
-  }
-
-  if (
-    (filters.maxRuntime?.length ?? 0) > 0 &&
-    !Number.isNaN(Number(filters.maxRuntime))
-  ) {
+  filters.maxRuntime &&
     algoliaFilters.push(`runtimeMinutes <= ${filters.maxRuntime}`);
-  }
 
   if (filters.genres?.length) {
     algoliaFilters.push(
@@ -112,24 +171,20 @@ export const constructFilters = (filters: Filters): string => {
   return algoliaFilters.join(" AND ");
 };
 
-type SearchParams = { [key: string]: string | string[] | undefined };
-
-interface QueryParamsObject {
-  [key: string]: string | string[] | undefined;
-}
-
 export const objectToQueryParams = (obj: {
-  [key: string]: string | string[] | undefined;
+  [key: string]: string | string[] | number | undefined;
 }) => {
   return Object.keys(obj)
-    .filter((key) => obj[key] !== undefined)
     .map((key) => {
       const value = obj[key];
-      if (value != null) {
-        return (
-          encodeURIComponent(key) + "=" + encodeURIComponent(value.toString())
-        );
+      if (value == null) return;
+      if (Array.isArray(value) && value.length === 0) {
+        return;
       }
+      return (
+        encodeURIComponent(key) + "=" + encodeURIComponent(value.toString())
+      );
     })
+    .filter((key) => key != null)
     .join("&");
 };
