@@ -30,8 +30,10 @@ export default async function Home({
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <main className="flex min-h-screen flex-col items-center p-4 md:p-12 lg:p-24 gap-8">
-        <h1 className="text-6xl">Find a movie</h1>
+      <main className="flex min-h-screen flex-col items-center p-4 py-12 md:p-12 lg:p-24 gap-8">
+        <h1 className="text-4xl font-nunito-sans font-bold max-w-[20ch] text-pretty text-center">
+          What would you like to watch?
+        </h1>
         <Search />
       </main>
     </HydrationBoundary>
