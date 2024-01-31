@@ -11,7 +11,7 @@ export interface Filters {
   minVotes?: number;
   minRuntime?: number;
   maxRuntime?: number;
-  genres?: string[];
+  genres?: Genre[];
 }
 
 const getNumberOrUndefined = (
@@ -51,12 +51,12 @@ export const validateFilters = (filters: Filters): Filters => {
         ? undefined
         : filters.maxYear,
     minVotes:
-      filters.minRating == null ||
-      filters.minRating <= 0 ||
-      filters.minRating > MAX_NUM_VOTES ||
-      filters.minRating % 10000 !== 0
+      filters.minVotes == null ||
+      filters.minVotes <= 0 ||
+      filters.minVotes > MAX_NUM_VOTES ||
+      filters.minVotes % 10000 !== 0
         ? undefined
-        : filters.minRating,
+        : filters.minVotes,
     minRating:
       filters.minRating == null ||
       filters.minRating <= 0 ||
@@ -114,7 +114,7 @@ export const getFiltersFromSearchParams = (searchParams: {
     maxRuntime: getNumberOrUndefined(
       getStringOrFirstElement(searchParams.maxRuntime)
     ),
-    genres: searchParams.genres?.toString().split(",") ?? [],
+    genres: (searchParams.genres?.toString().split(",") ?? []) as Genre[],
   });
 };
 
@@ -143,7 +143,8 @@ export const useFilters = (): Filters => {
     maxRuntime: getNumberOrUndefined(
       searchParams.getAll("maxRuntime")?.[0]?.toString() || undefined
     ),
-    genres: searchParams.getAll("genres")?.toString().split(",") ?? [],
+    genres: (searchParams.getAll("genres")?.toString().split(",") ??
+      []) as Genre[],
   });
 };
 
