@@ -7,7 +7,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import Input from "./Input";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { ArrowUpIcon, ErrorIcon } from "./icons";
+import { ArrowUpIcon, ErrorIcon, SearchIcon } from "./icons";
 import Loading from "./Loading";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
@@ -58,9 +58,16 @@ export default function Search() {
         </div>
       ) : (
         <>
-          <p>
-            {data?.pages[0].nbHits} hits in {data?.pages[0].processingTimeMS}ms
-          </p>
+          <div className="flex justify-between w-full text-slate-300">
+            <span className="flex text-lg font-bold gap-2 items-center ">
+              <SearchIcon className="text-md" />
+              Search results
+            </span>
+            <p className="font-bold">
+              {data?.pages[0].nbHits} hits in {data?.pages[0].processingTimeMS}
+              ms
+            </p>
+          </div>
           <InfiniteScroll
             className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
             dataLength={
