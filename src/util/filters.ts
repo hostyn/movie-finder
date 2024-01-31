@@ -179,7 +179,10 @@ export const objectToQueryParams = (obj: {
     .map((key) => {
       const value = obj[key];
       if (value == null) return;
-      if (Array.isArray(value) && value.length === 0) {
+      if (
+        (Array.isArray(value) || typeof value == "string") &&
+        value.length === 0
+      ) {
         return;
       }
       return (
